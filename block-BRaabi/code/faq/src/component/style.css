@@ -1,0 +1,12 @@
+.hidden {
+  display: none;
+  color: green;
+}
+.show {
+  display: block;
+  color: rgb(45, 179, 134);
+}
+.active {
+  color: brown;
+  font-size: 34px;
+}
