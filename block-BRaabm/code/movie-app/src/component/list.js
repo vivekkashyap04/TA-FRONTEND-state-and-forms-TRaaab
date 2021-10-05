@@ -7,39 +7,64 @@ class MovieList extends React.Component {
     super(props);
     this.state = {
       show: '',
-      istrue:false
+      istrue: false,
+      activeIndex: null,
     };
   }
   handleModel = (title) => {
     this.setState({
       show: title,
-      istrue:true
+      istrue: true,
+    });
+  };
+  handleActive = (index) => {
+    this.setState({
+      activeIndex: index,
+    });
+  };
+  handleDeactive = () => {
+    this.setState({
+      activeIndex: null,
     });
   };
 
-  showMovie = (title) => {
-      if(title){}
-      <Modal title={this.state.show} />;
-      console.log(this.state.show)
+  handleClose = () => {
+    this.setState({
+      istrue: false,
+    });
   };
+
   render() {
     // let movie = data.map(movie => movie);
     return (
       <div className="flex">
-        {data.map((movie) => (
-          <div className="box" key={movie.Title}>
+        {data.map((movie, index) => (
+          <div
+            className="box"
+            key={movie.Title}
+            onMouseOver={() => this.handleActive(index)}
+            onMouseLeave={() => this.handleDeactive}
+          >
             <img src={movie.Images} alt={movie.Images} className="img" />
             <h2>{movie.Title}</h2>
             <h3>{movie.Released}</h3>
-            <button
-              className="btn"
-              onClick={() => this.handleModel(movie.Title)}
-            >
-              More Info
-            </button>
-            {this.showMovie(this.state.istrue)}
+            {this.state.activeIndex === index ? (
+              <button
+                className="btn"
+                onClick={() => this.handleModel(movie.Title)}
+              >
+                More Info
+              </button>
+            ) : 
+              ''
+            }
+
+            {this.state.istrue ? (
+              <Modal click={this.handleClose} title={this.state.show} />
+            ) : (
+              ''
+            )}
           </div>
-         
         ))}
       </div>
     );
