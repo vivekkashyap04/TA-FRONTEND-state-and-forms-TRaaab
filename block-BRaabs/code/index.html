@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Articles</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <script type="text/babel">
+      class MultiForm extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            shipping: {
+              address: '',
+              zip: '',
+              city: '',
+              country: '',
+              error: {
+                address: '',
+              },
+            },
+            billing: {
+              address: '',
+              zip: '',
+              city: '',
+              country: '',
+            },
+          };
+        }
+        handleShipping = ({ target }) => {
+          let { name, value } = target;
+          let error = this.state.shipping.error;
+          switch (name) {
+            case 'address':
+              error.address =
+                value.length < 8
+                  ? 'the length of address must be greater than 8'
+                  : '';
+              break;
+            default:
+              break;
+          }
+          this.setState({
+            shipping: { ...this.state.shipping, [name]: value },
+          });
+        };
+        handleBilling = ({ target }) => {
+          let { name, value } = target;
+
+          this.setState({
+            billing: { ...this.state.billing, [name]: value },
+          });
+        };
+        handleSubmit = (event) => {
+          event.preventDefault();
+          console.log(this.state.billing);
+          console.log(this.state.shipping);
+        };
+        handleCopy = () => {
+          this.setState({
+            billing: { ...this.state.shipping },
+          });
+        };
+        render() {
+          let error = this.state.shipping.error;
+          return (
+            <div>
+              <div>
+                <center>
+                  <h2>Shipping Address</h2>
+                  <form onSubmit={this.handleSubmit}>
+                    <label htmlFor="address">Address</label>
+                    <input
+                      type="text"
+                      placeholder="eg:Dharamshala,HP"
+                      id="address"
+                      name="address"
+                      onChange={this.handleShipping}
+                    />
+                    <span>{error.address}</span>
+                    <label htmlFor="zip">Zip</label>
+                    <input
+                      type="text"
+                      placeholder="eg:983939"
+                      id="zip"
+                      name="zip"
+                      onChange={this.handleShipping}
+                    />
+                    <label htmlFor="city">City</label>
+                    <input
+                      type="text"
+                      placeholder="eg:Dharamshala"
+                      id="city"
+                      name="city"
+                      onChange={this.handleShipping}
+                    />
+                    <label htmlFor="country">Country</label>
+                    <input
+                      type="text"
+                      placeholder="eg:India"
+                      id="country"
+                      name="country"
+                      onChange={this.handleShipping}
+                    />
+                    <input type="submit" value="submit" />
+                  </form>
+                </center>
+              </div>
+              <div>
+                <center>
+                  <h2>Billing Address</h2>
+                  <input type="checkbox" onChange={this.handleCopy} />
+                  <form onSubmit={this.handleSubmit}>
+                    <label htmlFor="address">Address</label>
+                    <input
+                      type="text"
+                      placeholder="eg:Dharamshala,HP"
+                      id="address"
+                      name="address"
+                      onChange={this.handleBilling}
+                      value={this.state.billing.address}
+                    />
+                    <label htmlFor="zip">Zip</label>
+                    <input
+                      type="text"
+                      placeholder="eg:983939"
+                      id="zip"
+                      name="zip"
+                      onChange={this.handleBilling}
+                      value={this.state.billing.zip}
+                    />
+                    <label htmlFor="city">City</label>
+                    <input
+                      type="text"
+                      placeholder="eg:Dharamshala"
+                      id="city"
+                      name="city"
+                      onChange={this.handleBilling}
+                      value={this.state.billing.city}
+                    />
+                    <label htmlFor="country">Country</label>
+                    <input
+                      type="text"
+                      placeholder="eg:India"
+                      id="country"
+                      name="country"
+                      onChange={this.handleBilling}
+                      value={this.state.billing.country}
+                    />
+                    <input type="submit" value="submit" />
+                  </form>
+                </center>
+              </div>
+            </div>
+          );
+        }
+      }
+
+      const App = () => {
+        return (
+          <>
+            <MultiForm />
+          </>
+        );
+      };
+
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
