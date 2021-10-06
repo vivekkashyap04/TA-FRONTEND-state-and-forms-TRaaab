@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Articles</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <script type="text/babel">
+      class Multiple extends React.Component {
+        constructor(props) {
+          super(props);
+        }
+        render() {
+          return (
+            <div>
+              <form>
+                <label htmlFor="name">Text Input</label>
+                <input type="text" placeholder="enter name" id="name" />
+                <label htmlFor="date">Date Input</label>
+                <input type="date" id="date" />
+                <label htmlFor="file">File Input</label>
+                <input type="file" id="file" />
+                <label htmlFor="read">Read-Only Input</label>
+                <input type="text" readOnly id="read" />
+                <label htmlFor="disable">Disabled Input</label>
+                <input type="text" disabled id="disable" />
+                <label htmlFor="textarea">Textarea</label>
+                <textarea id="textarea" />
+                <label htmlFor="textdisable">textarea disable</label>
+                <textarea disabled id="textdisable" />
+              </form>
+            </div>
+          );
+        }
+      }
+
+      class Register extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            username: '',
+            email: '',
+            password: '',
+            repeatPassword: '',
+            error: {
+              username: '',
+              email: '',
+              password: '',
+              repeatPassword: '',
+            },
+          };
+        }
+
+        validateEmail = (email) => {
+          const re =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return re.test(email);
+        };
+
+        handleInput = ({ target }) => {
+          let { name, value } = target;
+          let error = this.state.error;
+          switch (name) {
+            case 'username':
+              error.username =
+                value.length < 4 ? 'username must be at least 3 charcters' : '';
+              break;
+            case 'email':
+              error.email = this.validateEmail(value)
+                ? ''
+                : 'Email is not valid';
+              break;
+            case 'password':
+              error.password =
+                value.length < 6
+                  ? 'password must be at least 6 characters'
+                  : '';
+              break;
+            case 'repeatPassword':
+              error.repeatPassword =
+                this.state.password !== value
+                  ? 'password 2 is also required'
+                  : '';
+              break;
+            default:
+              break;
+          }
+          this.setState({
+            [name]: value,
+          });
+        };
+
+        handleClick = (event) => {
+          event.preventDefault();
+          console.log(this.state.username, this.state.email);
+        };
+        render() {
+          let error = this.state.error;
+          const isEnable =
+            this.validateEmail(this.state.email) &&
+            this.state.password === this.state.repeatPassword;
+          return (
+            <center>
+              <h2>Regiter with Us </h2>
+              <form onSubmit={this.handleClick}>
+                <label htmlFor="username">Username</label>
+                <input
+                  type="text"
+                  value={this.state.username}
+                  id="username"
+                  name="username"
+                  placeholder="enter Username"
+                  onChange={this.handleInput}
+                  className={error.username && 'error'}
+                />
+                <span>{error.username}</span>
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  value={this.state.email}
+                  id="email"
+                  name="email"
+                  placeholder="enter Email"
+                  onChange={this.handleInput}
+                />
+                <span>{error.email}</span>
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  value={this.state.password}
+                  id="password"
+                  name="password"
+                  placeholder="enter password"
+                  onChange={this.handleInput}
+                />
+                <span>{error.password}</span>
+                <label htmlFor="repeatPassword">Conform Passord</label>
+                <input
+                  type="password"
+                  value={this.state.repeatPassword}
+                  id="repeatPassword"
+                  name="repeatPassword"
+                  placeholder="enter password again"
+                  onChange={this.handleInput}
+                />
+                <span>{error.repeatPassword}</span>
+                <input type="submit" value="submit" disabled={!isEnable} />
+              </form>
+            </center>
+          );
+        }
+      }
+
+      function App() {
+        return (
+          <>
+            <Multiple />
+            <Register />
+          </>
+        );
+      }
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
