@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Articles</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <div id="root"></div>
+    <script type="text/babel">
+      class Register extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            step: 1,
+            firstName: '',
+            lastName: '',
+            dob: '',
+            email: '',
+            address: '',
+            message: '',
+            choices: '',
+            error: {
+              username: '',
+              email: '',
+              password: '',
+              repeatPassword: '',
+            },
+          };
+        }
+
+        validateEmail = (email) => {
+          const re =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return re.test(email);
+        };
+
+        handleInput = ({ target }) => {
+          let { name, value } = target;
+          let { error } = this.state;
+          switch (name) {
+            case 'firstName':
+              error.username =
+                value.length < 4 ? 'username must be at least 3 charcters' : '';
+              break;
+            case 'email':
+              error.email = this.validateEmail(value)
+                ? ''
+                : 'Email is not valid';
+              break;
+            default:
+              break;
+          }
+          this.setState({
+            [name]: value,
+          });
+        };
+
+        handleClick = (event) => {
+          event.preventDefault();
+          console.log(this.state.username, this.state.email);
+          this.setState({
+            step: 1,
+          });
+        };
+        nextStep = () => {
+          this.setState({
+            step: this.state.step + 1,
+          });
+        };
+        prevStep = () => {
+          this.setState({
+            step:  this.state.step - 1 ,
+          });
+        };
+        render() {
+          let error = this.state.error;
+          const { step } = this.state;
+          let { firstName, lastName, dob, email, address, message, choices } =
+            this.state;
+          const values = {
+            firstName,
+            lastName,
+            dob,
+            email,
+            address,
+            message,
+            choices,
+          };
+
+          switch (step) {
+            case 1:
+              return (
+                <>
+                  <h2>step1/{this.state.step}</h2>
+                  <One
+                    next={this.nextStep}
+                    values={values}
+                    handleInput={this.handleInput}
+                    error={error}
+                  />
+                </>
+              );
+            case 2:
+              return (
+                <>
+                  <h2>step1/{this.state.step}</h2>
+                  <Two
+                    next={this.nextStep}
+                    prev={this.prevStep}
+                    values={values}
+                    handleInput={this.handleInput}
+                  />
+                </>
+              );
+            case 3:
+              return (
+                <>
+                  <h2>step1/{this.state.step}</h2>
+                  <Three
+                    prev={this.prevStep}
+                    handleInput={this.handleInput}
+                    values={values}
+                    handleClick={this.handleClick}
+                  />
+                </>
+              );
+            default:
+              break;
+          }
+        }
+      }
+
+      function One({ next, values, handleInput, error }) {
+        console.log(values);
+        const handleClick = (e) => {
+          event.preventDefault();
+          next();
+        };
+        return (
+          <div>
+            <h1>Sign Up</h1>
+            <form>
+              <label htmlFor="name">firstName</label>
+              <input
+                type="text"
+                name="firstName"
+                value={values.firstName}
+                placeholder="enter your first name"
+                id="name"
+                onChange={handleInput}
+              />
+              <label htmlFor="last">lastName</label>
+              <input
+                type="text"
+                name="lastName"
+                value={values.lastName}
+                placeholder="enter your last name"
+                id="name"
+                onChange={handleInput}
+              />
+              <label htmlFor="date">Date of Birth</label>
+              <input
+                type="date"
+                name="dob"
+                value={values.dob}
+                placeholder="enter your date"
+                id="date"
+                onChange={handleInput}
+              />
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={values.email}
+                placeholder="enter your date"
+                id="email"
+                onChange={handleInput}
+              />
+              <span>{error.email}</span>
+              <label htmlFor="address">address</label>
+              <input
+                type="text"
+                name="address"
+                value={values.address}
+                placeholder="address"
+                id="address"
+                onChange={handleInput}
+              />
+            </form>
+            <button onClick={handleClick}>Next</button>
+          </div>
+        );
+      }
+      function Two({ next, values, handleInput, prev }) {
+        const Nextstep = (e) => {
+          next();
+        };
+        const Prevstep = (e) => {
+          prev();
+        };
+        return (
+          <div>
+            <form>
+              <label htmlFor="message">Message</label>
+              <textarea
+                name="message"
+                id="message"
+                value={values.message}
+                onChange={handleInput}
+              />
+            </form>
+            <button onClick={Prevstep}>Prev</button>
+            <button onClick={Nextstep}>Next</button>
+          </div>
+        );
+      }
+
+      function Three({ prev, values, handleInput, handleClick }) {
+        const Prevstep = (e) => {
+          prev();
+        };
+
+        return (
+          <div>
+            <form onSubmit={handleClick}>
+              <label htmlFor="male">Male</label>
+              <input
+                type="radio"
+                value={values.choices}
+                name="choices"
+                onChange={handleInput}
+                id="male"
+              />
+              <label htmlFor="female">Female</label>
+              <input
+                type="radio"
+                value={values.choices}
+                name="choices"
+                onChange={handleInput}
+                id="female"
+              />
+              <input type="submit" value="submit" />
+            </form>
+            <button onClick={Prevstep}>Prev</button>
+          </div>
+        );
+      }
+
+      function App() {
+        return (
+          <>
+            <Register />
+          </>
+        );
+      }
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
