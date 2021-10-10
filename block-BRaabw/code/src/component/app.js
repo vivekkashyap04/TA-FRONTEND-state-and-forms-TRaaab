@@ -18,12 +18,12 @@ class App extends React.Component {
   }
   lowTohigh = () => {
     this.setState({
-      products: data.products.sort((a, b) => a.price - b.price),
+      products: [...data.products].sort((a, b) => a.price - b.price),
     });
   };
   highTolow = () => {
     this.setState({
-      products: data.products.sort((a, b) => b.price - a.price),
+      products: [...data.products].sort((a, b) => b.price - a.price),
     });
   };
   handleClick = ({ target }) => {
